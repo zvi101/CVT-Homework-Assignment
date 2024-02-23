@@ -1,23 +1,16 @@
 from flask import Flask, render_template
-from flask_socketio import SocketIO, send
+from flask_socketio import SocketIO
 
 
 app = Flask(__name__)
-app.config["SECRET"] = "secretKey"
+app.config["SECRET_KEY"] = "secretKey"
 socketio = SocketIO(app)
 
 
-@socketio.on('message')
-def printMessage(message):
-    print('Enter message: ' + message)
-    if message != 'user connected':
-        send(message, broadcast=True)
+@app.route("/", methods=["POST", "GET"])
+def home():
+    return render_template("home.html")
 
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
- 
 if __name__ == "__main__":
-    socketio.run(app, host="localhost")
+    socketio.run(app, debug=True)
