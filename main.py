@@ -11,6 +11,8 @@ socketio = SocketIO(app)
 
 rooms = {}
 
+
+# Creating a unique code
 def generate_unique_code(length):
     while True:
         code = ""
@@ -23,6 +25,7 @@ def generate_unique_code(length):
     return code
 
 
+# route front page
 @app.route("/", methods=["POST", "GET"])
 def home():
     session.clear()
@@ -54,6 +57,7 @@ def home():
     return render_template("home.html")
 
 
+# route conversation page
 @app.route("/room")
 def room():
     room = session.get("room")
@@ -63,7 +67,7 @@ def room():
     return render_template("room.html", code=room, messages=rooms[room]["messages"])
 
 
-# connect to chat
+# connect to the chat
 @socketio.on("connect")
 def connect(auth):
     room = session.get("room")
@@ -96,6 +100,7 @@ def disconnect():
     print(f"{name} has left the room {room}")
 
 
+# Message checker
 @socketio.on("message")
 def message(data):
     room = session.get("room")
